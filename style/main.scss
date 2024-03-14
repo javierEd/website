@@ -1,0 +1,28 @@
+@import "leptos-bulma.css";
+
+main.container {
+    height: calc(100vh - 284px);
+}
+
+.footer {
+    padding: 3rem 1.5rem;
+}
+
+.navbar-brand img {
+    max-height: unset;
+}
+
+.navbar-burger {
+    height: auto;
+}
+
+.navbar-end {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 1023px) {
+    .navbar-end img {
+        filter: invert(90%);
+    }
+}
