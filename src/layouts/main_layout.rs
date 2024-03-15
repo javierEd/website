@@ -1,15 +1,94 @@
+use leptos::html::Span;
 use leptos::*;
 use leptos_bulma::components::{
     BNavbar, BNavbarBrand, BNavbarBurger, BNavbarEnd, BNavbarItem, BNavbarMenu, BNavbarStart,
 };
 use leptos_meta::Title;
+use leptos_use::use_interval_fn;
+
+#[derive(Clone)]
+pub struct JobTitle(pub ReadSignal<&'static str>);
+
+#[component]
+pub fn JobTitlesCarousel(#[prop(default = "")] class: &'static str) -> impl IntoView {
+    let job_title = use_context::<JobTitle>().unwrap();
+    let job_titles = create_rw_signal(vec![job_title.0.get()]);
+
+    let node_ref = create_node_ref::<Span>();
+
+    create_effect(move |_| {
+        let mut new_job_titles = job_titles.get();
+
+        new_job_titles.push(job_title.0.get());
+
+        if new_job_titles.len() > 2 {
+            let _ = new_job_titles.remove(0);
+        }
+
+        job_titles.set(new_job_titles);
+
+        if let Some(element) = node_ref.get() {
+            let _ = element.remove_attribute("style");
+            element.set_scroll_top(0);
+            let _ = element.set_attribute("style", "scroll-behavior: smooth");
+            element.set_scroll_top(element.scroll_height());
+        }
+    });
+
+    view! {
+        <span class=format!("job-titles-carousel {}", class) node_ref=node_ref>
+            <For each=move || job_titles.get() key=|pn| pn.to_owned() children=move |pn| { view! { <div>{pn}</div> } }/>
+        </span>
+    }
+}
 
 #[component]
 pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
+    let job_titles = [
+        "Software Developer",
+        "Backend Developer",
+        "Frontend Developer",
+        "Fullstack Developer",
+        "Ruby Developer",
+        "Rust Developer",
+        "Javascript Developer",
+        "React Developer",
+        "Mobile Developer",
+        "Flutter Developer",
+        "Software Engineer",
+        "Backend Engineer",
+        "Frontend Engineer",
+        "Fullstack Engineer",
+        "Ruby Engineer",
+        "Rust Engineer",
+        "Javascript Engineer",
+        "React Engineer",
+        "Mobile Engineer",
+        "Flutter Engineer",
+        "Programmer",
+        "Coder",
+    ];
+
     let burger_is_active = create_rw_signal(false);
+    let (job_title, set_job_title) = create_signal(job_titles[0]);
+    let (job_title_index, set_job_title_index) = create_signal(0);
+
+    provide_context(JobTitle(job_title));
+
+    use_interval_fn(
+        move || {
+            set_job_title_index.set((job_title_index.get() + 1) % job_titles.len());
+            set_job_title.set(job_titles[job_title_index.get()]);
+        },
+        2500,
+    );
+
+    let title_view = move || {
+        view! {<Title text=format!("{} | Javier E. - {}", title, job_title.get())/> }
+    };
 
     view! {
-        <Title text=format!("{} | Javier E.", title)/>
+        {title_view}
 
         <BNavbar class="is-black">
             <BNavbarBrand>
@@ -19,9 +98,9 @@ pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
                             <img class="is-rounded" src="/images/favicon.png"/>
                         </figure>
                     </div>
-                    <div class="media-content has-text-centered">
+                    <div class="media-content">
                         <div class="title is-5 has-text-light">Javier E.</div>
-                        <div class="subtitle is-6 has-text-grey-lighter">Software developer</div>
+                        <div class="subtitle is-6 has-text-grey-lighter"><JobTitlesCarousel/></div>
                     </div>
                 </BNavbarItem>
 

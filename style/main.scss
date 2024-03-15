@@ -8,8 +8,12 @@ main.container {
     padding: 3rem 1.5rem;
 }
 
-.navbar-brand img {
-    max-height: unset;
+.navbar-brand {
+    min-width: 240px;
+
+    img {
+        max-height: unset;
+    }
 }
 
 .navbar-burger {
@@ -19,6 +23,13 @@ main.container {
 .navbar-end {
     display: flex;
     justify-content: center;
+}
+
+.job-titles-carousel {
+    display: inline-block;
+    max-height: 1.2rem;
+    overflow: hidden;
+    vertical-align: bottom;
 }
 
 @media (max-width: 1023px) {

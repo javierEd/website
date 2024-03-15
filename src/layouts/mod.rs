@@ -1,3 +1,3 @@
 mod main_layout;
 
-pub use main_layout::MainLayout;
+pub use main_layout::{JobTitlesCarousel, MainLayout};
