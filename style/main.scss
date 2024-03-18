@@ -1,7 +1,12 @@
 @import "leptos-bulma.css";
 
 main.container {
-    height: calc(100vh - 284px);
+    min-height: calc(100vh - 300px);
+}
+
+ul {
+    list-style: disc;
+    padding-left: 40px;
 }
 
 .footer {
@@ -31,8 +36,7 @@ main.container {
 
 .job-titles-carousel {
     display: inline-block;
-    max-height: 1.25rem;
-    max-width: 200px;
+    max-width: 310px;
     transition: max-width 0.5s;
     overflow: hidden;
     vertical-align: bottom;

@@ -35,9 +35,13 @@ pub fn JobTitlesCarousel(#[prop(default = "")] class: &'static str) -> impl Into
 
             if let Some(last_child) = element.child_nodes().get(1).unwrap().dyn_ref::<HtmlDivElement>() {
                 let last_child_width = last_child.client_width();
+                let last_child_height = last_child.client_height();
                 let _ = element.set_attribute(
                     "style",
-                    &format!("scroll-behavior: smooth; max-width: {}px", last_child_width),
+                    &format!(
+                        "scroll-behavior: smooth; max-width: {}px; max-height: {}px",
+                        last_child_width, last_child_height
+                    ),
                 );
             }
 
@@ -47,7 +51,7 @@ pub fn JobTitlesCarousel(#[prop(default = "")] class: &'static str) -> impl Into
 
     view! {
         <span class=format!("job-titles-carousel {}", class) node_ref=node_ref>
-            <For each=move || job_titles.get() key=|pn| pn.to_owned() children=move |pn| { view! { <div>{pn}</div> } }/>
+            <For each=move || job_titles.get() key=|jt| jt.to_owned() children=move |jt| view! { <div>{jt}</div> }/>
         </span>
     }
 }
@@ -77,6 +81,11 @@ pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
         "Flutter Engineer",
         "Programmer",
         "Coder",
+        "Loving Husband",
+        "Amateur Gardener",
+        "Aikidoka",
+        "Iaijutsuka",
+        "Human Being",
     ];
 
     let burger_is_active = create_rw_signal(false);
@@ -142,9 +151,7 @@ pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
             </BNavbarMenu>
         </BNavbar>
 
-        <main class="container my-4">
-            {children()}
-        </main>
+        <main class="container"><div class="m-5">{children()}</div></main>
 
         <footer class="footer">
             <div class="content">
