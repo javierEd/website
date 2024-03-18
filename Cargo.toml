@@ -30,6 +30,7 @@ leptos-use = "0.10.5"
 serde = "1.0.197"
 spin-sdk = { version = "2.2.0", optional = true }
 wasm-bindgen = { version = "0.2.92", optional = true }
+web-sys = "0.3.69"
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]

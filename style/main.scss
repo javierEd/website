@@ -14,6 +14,10 @@ main.container {
     img {
         max-height: unset;
     }
+
+    .job-titles-carousel {
+        transition: unset;
+    }
 }
 
 .navbar-burger {
@@ -27,9 +31,16 @@ main.container {
 
 .job-titles-carousel {
     display: inline-block;
-    max-height: 1.2rem;
+    max-height: 1.25rem;
+    max-width: 200px;
+    transition: max-width 0.5s;
     overflow: hidden;
     vertical-align: bottom;
+
+    div {
+        overflow-x: hidden;
+        width: max-content;
+    }
 }
 
 @media (max-width: 1023px) {

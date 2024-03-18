@@ -5,6 +5,8 @@ use leptos_bulma::components::{
 };
 use leptos_meta::Title;
 use leptos_use::use_interval_fn;
+use web_sys::wasm_bindgen::JsCast;
+use web_sys::HtmlDivElement;
 
 #[derive(Clone)]
 pub struct JobTitle(pub ReadSignal<&'static str>);
@@ -30,7 +32,15 @@ pub fn JobTitlesCarousel(#[prop(default = "")] class: &'static str) -> impl Into
         if let Some(element) = node_ref.get() {
             let _ = element.remove_attribute("style");
             element.set_scroll_top(0);
-            let _ = element.set_attribute("style", "scroll-behavior: smooth");
+
+            if let Some(last_child) = element.child_nodes().get(1).unwrap().dyn_ref::<HtmlDivElement>() {
+                let last_child_width = last_child.client_width();
+                let _ = element.set_attribute(
+                    "style",
+                    &format!("scroll-behavior: smooth; max-width: {}px", last_child_width),
+                );
+            }
+
             element.set_scroll_top(element.scroll_height());
         }
     });
