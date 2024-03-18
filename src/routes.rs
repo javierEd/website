@@ -19,6 +19,7 @@ pub fn AppRouter() -> impl IntoView {
         <Router>
             <Routes>
                 <Route path="" view=HomePage/>
+                <Route path="/about" view=AboutPage/>
                 <Route path="/*any" view=NotFoundPage/>
             </Routes>
         </Router>

@@ -129,6 +129,7 @@ pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
             <BNavbarMenu is_active=burger_is_active>
                 <BNavbarStart>
                     <BNavbarItem href="/">Home</BNavbarItem>
+                    <BNavbarItem href="/about">About</BNavbarItem>
                 </BNavbarStart>
 
                 <BNavbarEnd>
