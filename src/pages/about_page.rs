@@ -2,10 +2,13 @@ use chrono::{NaiveDate, Utc};
 use leptos::*;
 use leptos_bulma::columns::{BColumn, BColumns};
 
-use crate::layouts::MainLayout;
+use crate::components::PageTitle;
+use crate::i18n::{t, use_i18n};
 
 #[component]
 pub fn AboutPage() -> impl IntoView {
+    let i18n = use_i18n();
+
     let start_date = NaiveDate::from_ymd_opt(2010, 10, 1).unwrap();
 
     let experience_years = move || Utc::now().date_naive().years_since(start_date).unwrap_or_default();
@@ -82,51 +85,51 @@ pub fn AboutPage() -> impl IntoView {
     ];
 
     view! {
-        <MainLayout title="About me">
-            <h2 class="title is-1">"About me"</h2>
+        <PageTitle text=t!(i18n, about_me)/>
 
-            <h3 class="subtitle is-3">
-                <ul>
-                    <li>"I'm a Software Developer with "{experience_years}" years of experience."</li>
-                    <li>
-                        "I've been in "
-                        <a href="https://maps.app.goo.gl/T3HN2x8KL44DhxDB9" target="_blank">
-                            "Buenos Aires, Argentina"
-                        </a>
-                        " since October 2022."
-                    </li>
-                    <li>"But I was born and raised in "{cumana_link_view}"."</li>
-                </ul>
-            </h3>
+        <h2 class="title is-1">{t!(i18n, about_me)}</h2>
 
-            <section class="section">
-                <h4 class="title mb-1">"Open Source Projects"</h4>
+        <h3 class="subtitle is-3">
+            <ul>
+                <li>"I'm a Software Developer with "{experience_years}" years of experience."</li>
+                <li>
+                    "I've been in "
+                    <a href="https://maps.app.goo.gl/T3HN2x8KL44DhxDB9" target="_blank">
+                        "Buenos Aires, Argentina"
+                    </a>
+                    " since October 2022."
+                </li>
+                <li>"But I was born and raised in "{cumana_link_view}"."</li>
+            </ul>
+        </h3>
 
-                <For each=move|| projects.clone() key=|p| p.0 children=move |p| view! {
-                    <div class="pt-5">
-                        <h5 class="title is-4">{p.1}</h5>
-                        <h6 class="subtitle">{p.2}</h6>
-                    </div>
-                }/>
-            </section>
+        <section class="section">
+            <h4 class="title mb-1">"Open Source Projects"</h4>
 
-            <section class="section">
-                <h4 class="title mb-1">"Professional Experience"</h4>
+            <For each=move|| projects.clone() key=|p| p.0 children=move |p| view! {
+                <div class="pt-5">
+                    <h5 class="title is-4">{p.1}</h5>
+                    <h6 class="subtitle">{p.2}</h6>
+                </div>
+            }/>
+        </section>
 
-                <For each=move|| experience.clone() key=|exp| exp.0 children=move |exp| view! {
-                    <div class="pt-5">
-                        <h5 class="title is-4">{exp.1}</h5>
-                        <h6 class="subtitle">
-                            <BColumns>
-                                <BColumn>{exp.2}</BColumn>
-                                <BColumn>{exp.3}</BColumn>
-                                <BColumn>{exp.4}</BColumn>
-                                <BColumn>{exp.5}</BColumn>
-                            </BColumns>
-                        </h6>
-                    </div>
-                }/>
-            </section>
-        </MainLayout>
+        <section class="section">
+            <h4 class="title mb-1">"Professional Experience"</h4>
+
+            <For each=move|| experience.clone() key=|exp| exp.0 children=move |exp| view! {
+                <div class="pt-5">
+                    <h5 class="title is-4">{exp.1}</h5>
+                    <h6 class="subtitle">
+                        <BColumns>
+                            <BColumn>{exp.2}</BColumn>
+                            <BColumn>{exp.3}</BColumn>
+                            <BColumn>{exp.4}</BColumn>
+                            <BColumn>{exp.5}</BColumn>
+                        </BColumns>
+                    </h6>
+                </div>
+            }/>
+        </section>
     }
 }

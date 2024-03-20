@@ -23,6 +23,10 @@ console_error_panic_hook = "0.1.7"
 http = "1.1.0"
 leptos = "0.6.9"
 leptos-bulma = "0.0.0-alpha.6"
+leptos_i18n = { version = "0.3.3", default-features = false, features = [
+    "cookie",
+    "yaml_files",
+] }
 leptos_integration_utils = { version = "0.6.9", optional = true }
 leptos_meta = "0.6.9"
 leptos_router = "0.6.9"
@@ -34,9 +38,10 @@ wasm-bindgen = { version = "0.2.92", optional = true }
 web-sys = "0.3.69"
 
 [features]
-csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
+csr = ["leptos/csr", "leptos_i18n/csr", "leptos_meta/csr", "leptos_router/csr"]
 hydrate = [
     "leptos/hydrate",
+    "leptos_i18n/hydrate",
     "leptos_meta/hydrate",
     "leptos_router/hydrate",
     "dep:wasm-bindgen",
@@ -79,3 +84,7 @@ bin-features = ["ssr"]
 bin-default-features = false
 lib-features = ["hydrate"]
 lib-default-features = false
+
+[package.metadata.leptos-i18n]
+default = "en"
+locales = ["en", "es"]

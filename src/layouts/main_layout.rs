@@ -1,63 +1,17 @@
-use leptos::html::Span;
 use leptos::*;
+use leptos_bulma::columns::{BColumn, BColumns};
 use leptos_bulma::components::{
-    BNavbar, BNavbarBrand, BNavbarBurger, BNavbarEnd, BNavbarItem, BNavbarMenu, BNavbarStart,
+    BDropdown, BDropdownItem, BNavbar, BNavbarBrand, BNavbarBurger, BNavbarEnd, BNavbarItem, BNavbarMenu, BNavbarStart,
 };
-use leptos_meta::Title;
 use leptos_use::use_interval_fn;
-use web_sys::wasm_bindgen::JsCast;
-use web_sys::HtmlDivElement;
 
-#[derive(Clone)]
-pub struct JobTitle(pub ReadSignal<&'static str>);
+use crate::components::{JobTitle, JobTitlesCarousel};
+use crate::i18n::{t, use_i18n, Locale};
 
 #[component]
-pub fn JobTitlesCarousel(#[prop(default = "")] class: &'static str) -> impl IntoView {
-    let job_title = use_context::<JobTitle>().unwrap();
-    let job_titles = create_rw_signal(vec![job_title.0.get()]);
+pub fn MainLayout(children: Children) -> impl IntoView {
+    let i18n = use_i18n();
 
-    let node_ref = create_node_ref::<Span>();
-
-    create_effect(move |_| {
-        let mut new_job_titles = job_titles.get();
-
-        new_job_titles.push(job_title.0.get());
-
-        if new_job_titles.len() > 2 {
-            let _ = new_job_titles.remove(0);
-        }
-
-        job_titles.set(new_job_titles);
-
-        if let Some(element) = node_ref.get() {
-            let _ = element.remove_attribute("style");
-            element.set_scroll_top(0);
-
-            if let Some(last_child) = element.child_nodes().get(1).unwrap().dyn_ref::<HtmlDivElement>() {
-                let last_child_width = last_child.client_width();
-                let last_child_height = last_child.client_height();
-                let _ = element.set_attribute(
-                    "style",
-                    &format!(
-                        "scroll-behavior: smooth; max-width: {}px; max-height: {}px",
-                        last_child_width, last_child_height
-                    ),
-                );
-            }
-
-            element.set_scroll_top(element.scroll_height());
-        }
-    });
-
-    view! {
-        <span class=format!("job-titles-carousel {}", class) node_ref=node_ref>
-            <For each=move || job_titles.get() key=|jt| jt.to_owned() children=move |jt| view! { <div>{jt}</div> }/>
-        </span>
-    }
-}
-
-#[component]
-pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
     let job_titles = [
         "Software Developer",
         "Backend Developer",
@@ -102,13 +56,7 @@ pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
         2500,
     );
 
-    let title_view = move || {
-        view! {<Title text=format!("{} | Javier E. - {}", title, job_title.get())/> }
-    };
-
     view! {
-        {title_view}
-
         <BNavbar class="is-black">
             <BNavbarBrand>
                 <BNavbarItem class="media" href="/">
@@ -128,8 +76,8 @@ pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
 
             <BNavbarMenu is_active=burger_is_active>
                 <BNavbarStart>
-                    <BNavbarItem href="/">Home</BNavbarItem>
-                    <BNavbarItem href="/about">About</BNavbarItem>
+                    <BNavbarItem href="/">{t!(i18n, home)}</BNavbarItem>
+                    <BNavbarItem href="/about">{t!(i18n, about)}</BNavbarItem>
                 </BNavbarStart>
 
                 <BNavbarEnd>
@@ -155,23 +103,43 @@ pub fn MainLayout(children: Children, title: &'static str) -> impl IntoView {
         <main class="container"><div class="m-5">{children()}</div></main>
 
         <footer class="footer">
-            <div class="content">
-                <div class="is-flex is-align-items-center is-justify-content-center">
-                    This website is powered by
-                    <a class="mx-3" href="https://leptos.dev" target="_blank" title="Go to Leptos">
-                        <img src="/images/leptos-logo.svg" alt="Leptos" width="100"/>
-                    </a>
-                    &
-                    <a class="mx-3" href="https://bulma.io/" target="_blank" title="Go to Bulma">
-                        <img src="/images/bulma-logo.svg" alt="Bulma" width="100"/>
-                    </a>
-                </div>
-                <div class="mt-3 is-flex is-align-items-center is-justify-content-center">
-                    And you can see the source code at
-                    <a class="mx-3" href="https://github.com/javierEd/website" target="_blank" title="Go to GitHub">
-                        <img src="/images/github-logo.svg" alt="GitHub" width="100"/>
-                    </a>
-                </div>
+            <div class="content container">
+                <BColumns>
+                    <BColumn>
+                        <div class="is-flex is-align-items-center is-justify-content-center">
+                            {t!(i18n, this_website_was_made_with)}
+                            <a class="mx-3" href="https://leptos.dev" target="_blank" title="Go to Leptos">
+                                <img src="/images/leptos-logo.svg" alt="Leptos" width="100"/>
+                            </a>
+                            &
+                            <a class="mx-3" href="https://bulma.io/" target="_blank" title="Go to Bulma">
+                                <img src="/images/bulma-logo.svg" alt="Bulma" width="100"/>
+                            </a>
+                        </div>
+                        <div class="mt-3 is-flex is-align-items-center is-justify-content-center">
+                            {t!(i18n, and_you_can_see_the_source_code_at)}
+                            <a
+                                class="mx-3"
+                                href="https://github.com/javierEd/website"
+                                target="_blank"
+                                title="Go to GitHub"
+                            >
+                                <img src="/images/github-logo.svg" alt="GitHub" width="100"/>
+                            </a>
+                        </div>
+                    </BColumn>
+
+                    <BColumn is="narrow">
+                        <BDropdown
+                            trigger=|| view! {
+                                <span class="has-text-weight-bold">{t!(i18n, change_language)}" ▼"</span>
+                            }
+                        >
+                            <BDropdownItem on_click=move|_| i18n.set_locale(Locale::en)>"English"</BDropdownItem>
+                            <BDropdownItem on_click=move|_| i18n.set_locale(Locale::es)>"Español"</BDropdownItem>
+                        </BDropdown>
+                    </BColumn>
+                </BColumns>
             </div>
         </footer>
     }

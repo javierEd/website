@@ -1,3 +1,4 @@
+mod components;
 mod layouts;
 mod pages;
 mod routes;
@@ -6,6 +7,8 @@ mod routes;
 mod server;
 
 use cfg_if::cfg_if;
+
+leptos_i18n::load_locales!();
 
 cfg_if! {
 if #[cfg(feature = "hydrate")] {
