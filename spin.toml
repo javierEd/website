@@ -6,6 +6,15 @@ version = "0.0.0-alpha.1"
 authors = ["Javier E. <jaedns@gmail.com>"]
 description = "My personal website"
 
+[variables]
+admin_enable = { required = false, default = 'false' }
+admin_password = { required = false, default = 'admin' }
+admin_session_duration = { required = false, default = '30' }
+admin_session_key_cookie_name = { required = false, default = 'admin_session_key' }
+admin_session_key_length = { required = false, default = '64' }
+admin_session_renew_interval = { required = false, default = '7' }
+admin_username = { required = false, default = 'admin' }
+
 [[trigger.http]]
 route = "/..."
 component = "website"
@@ -21,12 +30,43 @@ command = "cargo leptos build --release"
 watch = ["src/**/*.rs", "Cargo.toml"]
 
 [[trigger.http]]
+route = "/admin/..."
+component = "website-admin"
+
+[component.website-admin]
+source = "target/wasm32-wasi/release/website_admin.wasm"
+allowed_outbound_hosts = []
+key_value_stores = ["default"]
+sqlite_databases = ["default"]
+
+[component.website-admin.build]
+command = "cargo leptos build --release --project website_admin"
+watch = ["website_admin/**/*.rs", "Cargo.toml"]
+
+[component.website-admin.variables]
+enable = '{{ admin_enable }}'
+password = '{{ admin_password }}'
+session_duration = '{{ admin_session_duration }}'
+session_key_cookie_name = '{{ admin_session_key_cookie_name }}'
+session_key_length = '{{ admin_session_key_length }}'
+session_renew_interval = '{{ admin_session_renew_interval }}'
+username = '{{ admin_username }}'
+
+[[trigger.http]]
 route = "/pkg/..."
 component = "pkg"
 
 [component.pkg]
 source = { url = "https://github.com/fermyon/spin-fileserver/releases/download/v0.1.0/spin_static_fs.wasm", digest = "sha256:96c76d9af86420b39eb6cd7be5550e3cb5d4cc4de572ce0fd1f6a29471536cb4" }
 files = [{ source = "target/site/pkg", destination = "/" }]
+
+[[trigger.http]]
+route = "/admin/pkg/..."
+component = "pkg-admin"
+
+[component.pkg-admin]
+source = { url = "https://github.com/fermyon/spin-fileserver/releases/download/v0.1.0/spin_static_fs.wasm", digest = "sha256:96c76d9af86420b39eb6cd7be5550e3cb5d4cc4de572ce0fd1f6a29471536cb4" }
+files = [{ source = "target/site-admin/pkg", destination = "/" }]
 
 [[trigger.http]]
 route = "/images/..."

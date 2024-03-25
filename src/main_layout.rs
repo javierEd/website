@@ -66,7 +66,7 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                         </figure>
                     </div>
                     <div class="media-content">
-                        <div class="title is-5 has-text-light">Javier E.</div>
+                        <div class="title is-5 has-text-light">"Javier E."</div>
                         <div class="subtitle is-6 has-text-grey-lighter"><JobTitlesCarousel/></div>
                     </div>
                 </BNavbarItem>

@@ -1,32 +1,5 @@
-[workspace]
-members = [".", "website_admin"]
-resolver = "2"
-
-[workspace.package]
-authors = ["Javier E. <jaedns@gmail.com>"]
-description = "My personal website"
-homepage = "https://javier.fermyon.app"
-repository = "https://github.com/javierEd/website.git"
-version = "0.0.0-alpha.1"
-license = "MIT"
-edition = "2021"
-publish = false
-
-[workspace.dependencies]
-console_error_panic_hook = "0.1.7"
-http = "1.1.0"
-leptos = "0.6.9"
-leptos-bulma = "0.0.0-alpha.6"
-leptos_integration_utils = "0.6.9"
-leptos_meta = "0.6.9"
-leptos_router = "0.6.9"
-leptos-spin = "0.1.0"
-serde = "1.0.197"
-spin-sdk = "2.2.0"
-wasm-bindgen = "0.2.92"
-
 [package]
-name = "website"
+name = "website_admin"
 authors.workspace = true
 description.workspace = true
 homepage.workspace = true
@@ -39,36 +12,29 @@ publish.workspace = true
 [lib]
 crate-type = ["cdylib"]
 
-[build-dependencies]
-leptos = { workspace = true }
-leptos-bulma = { workspace = true }
-tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
-
 [dependencies]
-chrono = "0.4.35"
 console_error_panic_hook = { workspace = true }
+cookie = { version = "0.18.1", optional = true }
 http = { workspace = true }
+lazy_static = { version = "1.4.0", optional = true }
 leptos = { workspace = true }
 leptos-bulma = { workspace = true }
-leptos_i18n = { version = "0.3.3", default-features = false, features = [
-    "cookie",
-    "yaml_files",
-] }
 leptos_integration_utils = { workspace = true, optional = true }
 leptos_meta = { workspace = true }
 leptos_router = { workspace = true }
 leptos-spin = { workspace = true, optional = true }
-leptos-use = "0.10.5"
-serde = { workspace = true }
+rand = { version = "0.8.5", optional = true }
+serde = { workspace = true, features = ["derive"] }
 spin-sdk = { workspace = true, optional = true }
+time = { version = "0.3.34", features = [
+    "serde-human-readable",
+], optional = true }
 wasm-bindgen = { workspace = true, optional = true }
-web-sys = "0.3.69"
 
 [features]
-csr = ["leptos/csr", "leptos_i18n/csr", "leptos_meta/csr", "leptos_router/csr"]
+csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
 hydrate = [
     "leptos/hydrate",
-    "leptos_i18n/hydrate",
     "leptos_meta/hydrate",
     "leptos_router/hydrate",
     "dep:wasm-bindgen",
@@ -79,24 +45,23 @@ ssr = [
     "leptos_meta/ssr",
     "leptos_router/ssr",
     "leptos/spin",
-    "leptos-use/ssr",
-    "dep:spin-sdk",
-    "dep:leptos-spin",
+    "dep:cookie",
+    "dep:lazy_static",
     "dep:leptos_integration_utils",
+    "dep:leptos-spin",
+    "dep:rand",
+    "dep:spin-sdk",
+    "dep:time",
 ]
-
-# Defines a size-optimized profile for the WASM bundle in release mode
-[profile.wasm-release]
-inherits = "release"
-opt-level = 'z'
-lto = true
-codegen-units = 1
-panic = "abort"
-
 
 [package.metadata.leptos]
 # The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
-output-name = "website"
+output-name = "website_admin"
+# The site root folder is where cargo-leptos generate all output. WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
+site-root = "target/site-admin"
+# The site-root relative folder where all compiled output (JS, WASM and CSS) is written
+# Defaults to pkg
+site-pkg-dir = "pkg"
 # [Optional] The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS. The CSS is optimized by Lightning CSS before being written to <site-root>/<site-pkg>/app.css
 style-file = "style/main.scss"
 
@@ -104,7 +69,7 @@ style-file = "style/main.scss"
 # The assets-dir cannot have a sub directory with the same name/path as site-pkg-dir.
 #
 # Optional. Env: LEPTOS_ASSETS_DIR.
-assets-dir = "assets"
+assets-dir = "../assets"
 
 # Mandatory fields for Spin apps
 bin-target-triple = "wasm32-wasi"
@@ -112,7 +77,3 @@ bin-features = ["ssr"]
 bin-default-features = false
 lib-features = ["hydrate"]
 lib-default-features = false
-
-[package.metadata.leptos-i18n]
-default = "en"
-locales = ["en", "es"]
