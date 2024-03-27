@@ -27,7 +27,14 @@ sqlite_databases = ["default"]
 
 [component.website.build]
 command = "cargo leptos build --release"
-watch = ["src/**/*.rs", "Cargo.toml"]
+watch = [
+    "src/**/*.rs",
+    "Cargo.toml",
+    "build.rs",
+    "locales/*.yaml",
+    "style/*.scss",
+    "website_admin/**/*",
+]
 
 [[trigger.http]]
 route = "/admin/..."

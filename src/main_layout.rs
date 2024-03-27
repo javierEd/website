@@ -59,7 +59,7 @@ pub fn MainLayout(children: Children) -> impl IntoView {
     view! {
         <BNavbar class="is-black">
             <BNavbarBrand>
-                <BNavbarItem class="media" href="/">
+                <BNavbarItem class="media mb-0" href="/">
                     <div class="media-left">
                         <figure class="image is-48x48">
                             <img class="is-rounded" src="/images/favicon.png"/>
@@ -109,11 +109,17 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                         <div class="is-flex is-align-items-center is-justify-content-center">
                             {t!(i18n, this_website_was_made_with)}
                             <a class="mx-3" href="https://leptos.dev" target="_blank" title="Go to Leptos">
-                                <img src="/images/leptos-logo.svg" alt="Leptos" width="100"/>
+                                <picture>
+                                    <source srcset="/images/leptos-logo-light.svg" media="(prefers-color-scheme: dark)"/>
+                                    <img src="/images/leptos-logo.svg" alt="Leptos" width="100"/>
+                                </picture>
                             </a>
                             &
                             <a class="mx-3" href="https://bulma.io/" target="_blank" title="Go to Bulma">
-                                <img src="/images/bulma-logo.svg" alt="Bulma" width="100"/>
+                                <picture>
+                                    <source srcset="/images/bulma-logo-light.svg" media="(prefers-color-scheme: dark)"/>
+                                    <img src="/images/bulma-logo.svg" alt="Bulma" width="100"/>
+                                </picture>
                             </a>
                         </div>
                         <div class="mt-3 is-flex is-align-items-center is-justify-content-center">
@@ -124,7 +130,10 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                                 target="_blank"
                                 title="Go to GitHub"
                             >
-                                <img src="/images/github-logo.svg" alt="GitHub" width="100"/>
+                                <picture>
+                                    <source srcset="/images/github-logo-light.svg" media="(prefers-color-scheme: dark)"/>
+                                    <img src="/images/github-logo.svg" alt="GitHub" width="100"/>
+                                </picture>
                             </a>
                         </div>
                     </BColumn>
