@@ -10,8 +10,13 @@ async fn handle_website_admin(req: IncomingRequest, resp_out: ResponseOutparam) 
     conf.leptos_options.site_root = "target/site-admin".to_owned();
     conf.leptos_options.site_pkg_dir = "admin/pkg".to_owned();
 
-    register_explicit::<crate::admin_layout::AttemptToLogout>();
+    register_explicit::<crate::pages::AttemptToCreatePost>();
+    register_explicit::<crate::pages::AttemptToDeletePost>();
+    register_explicit::<crate::pages::AttemptToUpdatePost>();
     register_explicit::<crate::pages::AttemptToLogin>();
+    register_explicit::<crate::pages::GetPost>();
+    register_explicit::<crate::pages::GetPosts>();
+    register_explicit::<crate::admin_layout::AttemptToLogout>();
     register_explicit::<crate::server_functions::IsAdminEnabled>();
     register_explicit::<crate::server_functions::IsAuthenticated>();
 

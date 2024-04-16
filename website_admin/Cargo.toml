@@ -1,7 +1,7 @@
 [package]
 name = "website_admin"
-authors.workspace = true
 description.workspace = true
+authors.workspace = true
 homepage.workspace = true
 repository.workspace = true
 version.workspace = true
@@ -16,7 +16,6 @@ crate-type = ["cdylib"]
 console_error_panic_hook = { workspace = true }
 cookie = { version = "0.18.1", optional = true }
 http = { workspace = true }
-lazy_static = { version = "1.4.0", optional = true }
 leptos = { workspace = true }
 leptos-bulma = { workspace = true }
 leptos_integration_utils = { workspace = true, optional = true }
@@ -26,10 +25,11 @@ leptos-spin = { workspace = true, optional = true }
 rand = { version = "0.8.5", optional = true }
 serde = { workspace = true, features = ["derive"] }
 spin-sdk = { workspace = true, optional = true }
-time = { version = "0.3.34", features = [
-    "serde-human-readable",
-], optional = true }
+slug = "0.1.5"
+time = { workspace = true, features = ["serde-human-readable", "wasm-bindgen"] }
 wasm-bindgen = { workspace = true, optional = true }
+web-sys = { workspace = true }
+website_core = { workspace = true }
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
@@ -45,13 +45,12 @@ ssr = [
     "leptos_meta/ssr",
     "leptos_router/ssr",
     "leptos/spin",
+    "website_core/ssr",
     "dep:cookie",
-    "dep:lazy_static",
     "dep:leptos_integration_utils",
     "dep:leptos-spin",
     "dep:rand",
     "dep:spin-sdk",
-    "dep:time",
 ]
 
 [package.metadata.leptos]

@@ -1,5 +1,4 @@
-@import "../../pkg/leptos-bulma.css";
-@import "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0";
+@use "../../style/leptos-bulma.css";
 
 .navbar-brand img {
     max-height: unset;

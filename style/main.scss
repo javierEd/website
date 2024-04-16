@@ -1,4 +1,4 @@
-@import "leptos-bulma.css";
+@use "leptos-bulma.css";
 
 main.container {
     min-height: calc(100vh - 275px);
@@ -40,11 +40,5 @@ ul {
     div {
         overflow: hidden;
         width: max-content;
-    }
-}
-
-@media (max-width: 1023px) {
-    .navbar-end img {
-        filter: invert(90%);
     }
 }

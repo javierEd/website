@@ -57,7 +57,7 @@ pub fn MainLayout(children: Children) -> impl IntoView {
     );
 
     view! {
-        <BNavbar class="is-black">
+        <BNavbar class="is-black has-shadow">
             <BNavbarBrand>
                 <BNavbarItem class="media mb-0" href="/">
                     <div class="media-left">
@@ -78,6 +78,7 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                 <BNavbarStart>
                     <BNavbarItem href="/">{t!(i18n, home)}</BNavbarItem>
                     <BNavbarItem href="/about">{t!(i18n, about)}</BNavbarItem>
+                    <BNavbarItem href="/blog">{t!(i18n, blog)}</BNavbarItem>
                 </BNavbarStart>
 
                 <BNavbarEnd>

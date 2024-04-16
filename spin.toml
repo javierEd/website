@@ -34,6 +34,7 @@ watch = [
     "locales/*.yaml",
     "style/*.scss",
     "website_admin/**/*",
+    "website_core/**/*",
 ]
 
 [[trigger.http]]

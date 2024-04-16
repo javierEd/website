@@ -1,7 +1,6 @@
 use leptos::*;
 use leptos_bulma::components::{
-    BModal, BModalClose, BModalContent, BNavbar, BNavbarBrand, BNavbarBurger, BNavbarEnd, BNavbarItem, BNavbarMenu,
-    BNavbarStart,
+    BModal, BModalContent, BNavbar, BNavbarBrand, BNavbarBurger, BNavbarEnd, BNavbarItem, BNavbarMenu, BNavbarStart,
 };
 use leptos_bulma::elements::BBox;
 
@@ -29,7 +28,7 @@ pub fn AdminLayout(children: Children, #[prop(into)] title: TextProp) -> impl In
 
         <PageTitle text=title/>
 
-        <BNavbar class="is-dark">
+        <BNavbar class="is-dark has-shadow">
             <BNavbarBrand>
                 <BNavbarItem class="media mb-0" href="/admin">
                     <div class="media-left">
@@ -49,11 +48,15 @@ pub fn AdminLayout(children: Children, #[prop(into)] title: TextProp) -> impl In
             <BNavbarMenu is_active=burger_is_active>
                 <BNavbarStart>
                     <BNavbarItem href="/admin">"Home"</BNavbarItem>
+                    <BNavbarItem href="/admin/posts">"Posts"</BNavbarItem>
                 </BNavbarStart>
 
                 <BNavbarEnd>
-                    <BNavbarItem href="/" target="_blank">"Go to website"</BNavbarItem>
-                    <BNavbarItem on_click=move |_| show_logout_confirmation.set(true)>"Logout"</BNavbarItem>
+                    <BNavbarItem href="/admin/posts/new">"New Post"</BNavbarItem>
+                    <BNavbarItem href="/" target="_blank">
+                        "Go to website"
+                    </BNavbarItem>
+                    <BNavbarItem on:click=move |_| show_logout_confirmation.set(true)>"Logout"</BNavbarItem>
                 </BNavbarEnd>
             </BNavbarMenu>
         </BNavbar>
@@ -61,15 +64,9 @@ pub fn AdminLayout(children: Children, #[prop(into)] title: TextProp) -> impl In
         <BModal is_active=show_logout_confirmation>
             <BModalContent>
                 <BBox class="has-text-centered">
-                    <span class="icon is-large">
-                        <span class="material-symbols-rounded">question_mark</span>
-                    </span>
                     <h3 class="title is-4">"Are you sure you want to logout?"</h3>
                     <div class="buttons is-centered">
-                        <a
-                            class="button is-primary"
-                            on:click=move |_| action_logout.dispatch(())
-                        >
+                        <a class="button is-primary" on:click=move |_| action_logout.dispatch(())>
                             "Accept"
                         </a>
                         <a class="button" on:click=move |_| show_logout_confirmation.set(false)>
@@ -78,7 +75,6 @@ pub fn AdminLayout(children: Children, #[prop(into)] title: TextProp) -> impl In
                     </div>
                 </BBox>
             </BModalContent>
-            <BModalClose on_click=move |_| show_logout_confirmation.set(false)/>
         </BModal>
 
         <main class="container">

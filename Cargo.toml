@@ -1,38 +1,41 @@
 [workspace]
-members = [".", "website_admin"]
+members = [".", "website_admin", "website_core"]
 resolver = "2"
 
 [workspace.package]
-authors = ["Javier E. <jaedns@gmail.com>"]
 description = "My personal website"
+authors = ["Javier E. <jaedns@gmail.com>"]
 homepage = "https://javier.fermyon.app"
 repository = "https://github.com/javierEd/website.git"
-version = "0.0.0-alpha.1"
 license = "MIT"
+version = "0.0.0-alpha.1"
 edition = "2021"
 publish = false
 
 [workspace.dependencies]
 console_error_panic_hook = "0.1.7"
 http = "1.1.0"
-leptos = "0.6.9"
-leptos-bulma = "0.0.0-alpha.7"
-leptos_integration_utils = "0.6.9"
-leptos_meta = "0.6.9"
-leptos_router = "0.6.9"
+leptos = "0.6.11"
+leptos-bulma = "0.0.0-alpha.11"
+leptos_integration_utils = "0.6.11"
+leptos_meta = "0.6.11"
+leptos_router = "0.6.11"
 leptos-spin = "0.1.0"
 serde = "1.0.197"
 spin-sdk = "2.2.0"
+time = { version = "0.3.36", features = ["serde-human-readable"] }
 wasm-bindgen = "0.2.92"
+web-sys = "0.3.69"
+website_core = { path = "website_core" }
 
 [package]
 name = "website"
-authors.workspace = true
 description.workspace = true
+authors.workspace = true
 homepage.workspace = true
 repository.workspace = true
-version.workspace = true
 license.workspace = true
+version.workspace = true
 edition.workspace = true
 publish.workspace = true
 
@@ -42,10 +45,9 @@ crate-type = ["cdylib"]
 [build-dependencies]
 leptos = { workspace = true }
 leptos-bulma = { workspace = true }
-tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
 
 [dependencies]
-chrono = "0.4.35"
+chrono = "0.4.37"
 console_error_panic_hook = { workspace = true }
 http = { workspace = true }
 leptos = { workspace = true }
@@ -58,11 +60,14 @@ leptos_integration_utils = { workspace = true, optional = true }
 leptos_meta = { workspace = true }
 leptos_router = { workspace = true }
 leptos-spin = { workspace = true, optional = true }
-leptos-use = "0.10.5"
+leptos-use = "0.10.7"
 serde = { workspace = true }
+pulldown-cmark = "0.10.2"
 spin-sdk = { workspace = true, optional = true }
+time = { workspace = true, features = ["serde-human-readable", "wasm-bindgen"] }
 wasm-bindgen = { workspace = true, optional = true }
-web-sys = "0.3.69"
+web-sys = { workspace = true }
+website_core = { workspace = true }
 
 [features]
 csr = ["leptos/csr", "leptos_i18n/csr", "leptos_meta/csr", "leptos_router/csr"]
@@ -80,6 +85,7 @@ ssr = [
     "leptos_router/ssr",
     "leptos/spin",
     "leptos-use/ssr",
+    "website_core/ssr",
     "dep:spin-sdk",
     "dep:leptos-spin",
     "dep:leptos_integration_utils",

@@ -2,8 +2,48 @@ a: A
 about: About
 about_me: About me
 and_you_can_see_the_source_code_at: And you can see the source code at
+blog: Blog
 change_language: Change language
+days_ago:
+    - i32
+    - count: 1
+      value: 1 day ago
+    - count: _
+      value: "{{ count }} days ago"
 hi_im: Hi, I'm
 home: Home
+hours_ago:
+    - i32
+    - count: 1
+      value: 1 hour ago
+    - count: _
+      value: "{{ count }} hours ago"
+latest_posts: Latest posts
+minutes_ago:
+    - i32
+    - count: 1
+      value: 1 minute ago
+    - count: _
+      value: "{{ count }} minutes ago"
+months_ago:
+    - i32
+    - count: 1
+      value: 1 month ago
+    - count: _
+      value: "{{ count }} months ago"
+published: Published
+seconds_ago:
+    - i32
+    - count: 1
+      value: 1 second ago
+    - count: _
+      value: "{{ count }} secondsi"
+show_more: Show more
 this_website_was_made_with: This website was made with
 with_some_years_of_experience: with some years of experience
+years_ago:
+    - i32
+    - count: 1
+      value: 1 year ago
+    - count: _
+      value: "{{ count }} years ago"

@@ -1,0 +1,20 @@
+[package]
+name = "website_core"
+description.workspace = true
+authors.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+lazy_static = { version = "1.4.0", optional = true }
+regex = { version = "1.10.4", optional = true }
+spin-sdk = { workspace = true, optional = true }
+serde = { workspace = true, features = ["derive"] }
+time = { workspace = true, features = ["serde-human-readable"] }
+
+[features]
+ssr = ["dep:lazy_static", "dep:regex", "dep:spin-sdk"]

@@ -2,6 +2,7 @@ mod components;
 mod main_layout;
 mod main_router;
 mod pages;
+mod server_functions;
 
 #[cfg(feature = "ssr")]
 mod server;

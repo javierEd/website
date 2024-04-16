@@ -6,6 +6,10 @@ use leptos_router::Redirect;
 
 use crate::server_functions::{is_admin_enabled, is_authenticated};
 
+mod post_form;
+
+pub use post_form::*;
+
 #[component]
 pub fn PageTitle(#[prop(into)] text: TextProp) -> impl IntoView {
     move || view! { <Title text=format!("{} | Javier E. - Admin Panel", text.get())/> }
@@ -24,11 +28,18 @@ pub fn RequireAuthentication() -> impl IntoView {
 pub fn RequireNoAuthentication() -> impl IntoView {
     view! {
         <Await future=is_admin_enabled let:data>
-            {if let Ok(false) = data { Some(view! { <Redirect path="/"/> }) } else { Some(view! {
-                <Await future=is_authenticated let:data>
-                    {if let Ok(true) = data { Some(view! { <Redirect path="/admin"/> }) } else { None }}
-                </Await>
-            }) }}
+            {if let Ok(false) = data {
+                Some(view! { <Redirect path="/"/> })
+            } else {
+                Some(
+                    view! {
+                        <Await future=is_authenticated let:data>
+                            {if let Ok(true) = data { Some(view! { <Redirect path="/admin"/> }) } else { None }}
+                        </Await>
+                    },
+                )
+            }}
+
         </Await>
     }
 }
@@ -41,7 +52,9 @@ pub fn SubmitButton(
     view! {
         <BField>
             <BControl>
-                <BButton button_type="submit" class="button is-info is-fullwidth" is_loading=is_loading>{label}</BButton>
+                <BButton button_type="submit" class="button is-info is-fullwidth" is_loading=is_loading>
+                    {label}
+                </BButton>
             </BControl>
         </BField>
     }

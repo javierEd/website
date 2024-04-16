@@ -20,6 +20,9 @@ pub fn AdminRouter() -> impl IntoView {
             <Routes>
                 <Route path="/admin" view=HomePage/>
                 <Route path="/admin/login" view=LoginPage/>
+                <Route path="/admin/posts" view=PostsPage/>
+                <Route path="/admin/posts/new" view=NewPostPage/>
+                <Route path="/admin/posts/:id/edit" view=EditPostPage/>
                 <Route path="/admin/*any" view=NotFoundPage/>
             </Routes>
         </Router>

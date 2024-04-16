@@ -2,8 +2,48 @@ a: Un
 about: Acerca de
 about_me: Acerca de mi
 and_you_can_see_the_source_code_at: Y puedes ver el código fuente en
+blog: Blog
 change_language: Cambiar idioma
+days_ago:
+    - i32
+    - count: 1
+      value: hace 1 día
+    - count: _
+      value: "hace {{ count }} días"
 hi_im: Hola, soy
 home: Inicio
+hours_ago:
+    - i32
+    - count: 1
+      value: hace 1 hora
+    - count: _
+      value: "hace {{ count }} horas"
+latest_posts: Posts recientes
+minutes_ago:
+    - i32
+    - count: 1
+      value: hace 1 minuto
+    - count: _
+      value: "hace {{count }} minutos"
+months_ago:
+    - i32
+    - count: 1
+      value: hace 1 mes
+    - count: _
+      value: "hace {{ count }} meses"
+published: Publicado
+seconds_ago:
+    - i32
+    - count: 1
+      value: hace 1 segundo
+    - count: _
+      value: "hace {{ count }} segundos"
+show_more: Mostrar más
 this_website_was_made_with: Este sitio web fue hecho con
 with_some_years_of_experience: con algunos años de experiencia
+years_ago:
+    - i32
+    - count: 1
+      value: hace 1 año
+    - count: _
+      value: "hace {{ count }} años"

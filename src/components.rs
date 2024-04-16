@@ -1,8 +1,13 @@
 use leptos::html::Span;
 use leptos::*;
+use leptos_bulma::elements::{BBox, BTitle};
 use leptos_meta::Title;
 use web_sys::wasm_bindgen::JsCast;
 use web_sys::HtmlDivElement;
+
+use website_core::models::Post;
+
+use crate::i18n::{t, use_i18n};
 
 #[derive(Clone)]
 pub struct JobTitle(pub ReadSignal<&'static str>);
@@ -57,4 +62,53 @@ pub fn PageTitle(#[prop(into)] text: TextProp) -> impl IntoView {
     let job_title = use_context::<JobTitle>().unwrap();
 
     move || view! { <Title text=format!("{} | Javier E. - {}", text.get(), job_title.0.get())/> }
+}
+
+#[component]
+pub fn PostBoxes(posts: Vec<Post>) -> impl IntoView {
+    view! {
+        <For each=move || posts.clone() key=|post| post.id let:post>
+            <PostBox post=post/>
+        </For>
+    }
+}
+
+#[component]
+fn PostBox(post: Post) -> impl IntoView {
+    let i18n = use_i18n();
+    let published_at_formatted = post.published_at_formatted().unwrap();
+    let published_time_ago = post.published_time_ago().unwrap();
+
+    view! {
+        <a href=format!("/blog/{}", post.slug)>
+            <BBox class="mb-4">
+                <BTitle is=3>{post.title}</BTitle>
+
+                <div class="has-text-right">
+                    {t!(i18n, published)} " "
+                    <TimeAgo formatted=published_at_formatted count=published_time_ago.0 unit=published_time_ago.1/>
+                </div>
+            </BBox>
+        </a>
+    }
+}
+
+#[component]
+pub fn TimeAgo(#[prop(into)] formatted: TextProp, count: i32, unit: &'static str) -> impl IntoView {
+    let i18n = use_i18n();
+    let count = move || count;
+    let t_time_ago = move || match unit {
+        "secs" => t!(i18n, seconds_ago, count = count).into_view(),
+        "mins" => t!(i18n, minutes_ago, count = count).into_view(),
+        "hours" => t!(i18n, hours_ago, count = count).into_view(),
+        "days" => t!(i18n, days_ago, count = count).into_view(),
+        "months" => t!(i18n, months_ago, count = count).into_view(),
+        _ => t!(i18n, years_ago, count = count).into_view(),
+    };
+
+    view! {
+        <time datetime=formatted.clone() title=formatted>
+            {t_time_ago}
+        </time>
+    }
 }

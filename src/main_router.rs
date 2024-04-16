@@ -54,6 +54,8 @@ pub fn MainRouter() -> impl IntoView {
                 <Routes>
                     <Route path="" view=HomePage/>
                     <Route path="/about" view=AboutPage/>
+                    <Route path="/blog" view=BlogPage/>
+                    <Route path="/blog/:slug" view=ShowPostPage/>
                     <Route path="/*any" view=NotFoundPage/>
                 </Routes>
             </MainLayout>
