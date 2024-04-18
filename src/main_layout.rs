@@ -12,6 +12,25 @@ use crate::i18n::{t, use_i18n, Locale};
 use crate::main_router::use_theme_context;
 
 #[component]
+fn ImageColorModes(dark_src: &'static str, light_src: &'static str, alt: &'static str, width: i8) -> impl IntoView {
+    let theme = use_theme_context();
+
+    view! {
+        <picture>
+            <Show when=move || theme.is_dark() || theme.is_system()>
+                <source srcset=dark_src media="(prefers-color-scheme: dark)"/>
+            </Show>
+
+            <Show when=move || theme.is_light() || theme.is_system()>
+                <source srcset=light_src media="(prefers-color-scheme: light)"/>
+            </Show>
+
+            <img src=move || { if theme.is_dark() { dark_src } else { light_src } } alt=alt width=width/>
+        </picture>
+    }
+}
+
+#[component]
 pub fn MainLayout(children: Children) -> impl IntoView {
     let i18n = use_i18n();
     let theme = use_theme_context();
@@ -130,44 +149,35 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                         <div class="is-flex is-align-items-center is-justify-content-center">
                             {t!(i18n, this_website_was_made_with)}
                             <a class="mx-3" href="https://leptos.dev" target="_blank" title="Go to Leptos">
-                                <picture>
-                                    <Show when=move || theme.is_dark() || theme.is_system()>
-                                        <source
-                                            srcset="/images/leptos-logo-light.svg"
-                                            media="(prefers-color-scheme: dark)"
-                                        />
-                                    </Show>
-                                    <img src="/images/leptos-logo.svg" alt="Leptos" width="100"/>
-                                </picture>
+                                <ImageColorModes
+                                    dark_src="/images/leptos-logo-light.svg"
+                                    light_src="/images/leptos-logo.svg"
+                                    alt="Leptos"
+                                    width=100
+                                />
                             </a> & <a class="mx-3" href="https://bulma.io/" target="_blank" title="Go to Bulma">
-                                <picture>
-                                    <Show when=move || theme.is_dark() || theme.is_system()>
-                                        <source
-                                            srcset="/images/bulma-logo-light.svg"
-                                            media="(prefers-color-scheme: dark)"
-                                        />
-                                    </Show>
-                                    <img src="/images/bulma-logo.svg" alt="Bulma" width="100"/>
-                                </picture>
+                                <ImageColorModes
+                                    dark_src="/images/bulma-logo-light.svg"
+                                    light_src="/images/bulma-logo.svg"
+                                    alt="Bulma"
+                                    width=100
+                                />
                             </a>
                         </div>
                         <div class="mt-3 is-flex is-align-items-center is-justify-content-center">
                             {t!(i18n, and_you_can_see_the_source_code_at)}
                             <a
                                 class="mx-3"
-                                href="https://github.com/javierEd/leptos-bulma/blob/main/website"
+                                href="https://github.com/javierEd/website"
                                 target="_blank"
                                 title="Go to GitHub"
                             >
-                                <picture>
-                                    <Show when=move || theme.is_dark() || theme.is_system()>
-                                        <source
-                                            srcset="/images/github-logo-light.svg"
-                                            media="(prefers-color-scheme: dark)"
-                                        />
-                                    </Show>
-                                    <img src="/images/github-logo.svg" alt="GitHub" width="100"/>
-                                </picture>
+                                <ImageColorModes
+                                    dark_src="/images/github-logo-light.svg"
+                                    light_src="/images/github-logo.svg"
+                                    alt="GitHub"
+                                    width=100
+                                />
                             </a>
                         </div>
                     </BColumn>
