@@ -16,12 +16,12 @@ publish = false
 console_error_panic_hook = "0.1.7"
 http = "1.1.0"
 leptos = "0.6.11"
-leptos-bulma = "0.0.0-alpha.11"
+leptos-bulma = "0.0.0-alpha.12"
 leptos_integration_utils = "0.6.11"
 leptos_meta = "0.6.11"
 leptos_router = "0.6.11"
 leptos-spin = "0.1.0"
-serde = "1.0.197"
+serde = "1.0.198"
 spin-sdk = "2.2.0"
 time = { version = "0.3.36", features = ["serde-human-readable"] }
 wasm-bindgen = "0.2.92"
@@ -47,7 +47,6 @@ leptos = { workspace = true }
 leptos-bulma = { workspace = true }
 
 [dependencies]
-chrono = "0.4.37"
 console_error_panic_hook = { workspace = true }
 http = { workspace = true }
 leptos = { workspace = true }

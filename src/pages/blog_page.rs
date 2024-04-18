@@ -1,6 +1,6 @@
 use leptos::*;
 use leptos_bulma::components::BPagination;
-use leptos_bulma::elements::BTitle;
+use leptos_bulma::elements::{BBlock, BTitle};
 use leptos_router::use_query_map;
 
 use crate::components::{PageTitle, PostBoxes};
@@ -34,10 +34,15 @@ pub fn BlogPage() -> impl IntoView {
                 .get()
                 .and_then(|v| v.ok())
                 .map(|(posts, pages_count)| {
-                    view! {
-                        <PostBoxes posts=posts/>
+                    if !posts.is_empty() || pages_count > 1 {
+                        view! {
+                            <PostBoxes posts=posts/>
 
-                        <BPagination class="is-centered mt-4" count=pages_count/>
+                            <BPagination class="is-centered mt-4" count=pages_count/>
+                        }
+                            .into_view()
+                    } else {
+                        view! { <BBlock class="has-text-centered">{t!(i18n, nothing_to_see_here_yet)}</BBlock> }
                     }
                 })}
 

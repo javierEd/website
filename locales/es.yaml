@@ -31,6 +31,7 @@ months_ago:
       value: hace 1 mes
     - count: _
       value: "hace {{ count }} meses"
+nothing_to_see_here_yet: Nada que ver aquí todavía.
 published: Publicado
 seconds_ago:
     - i32

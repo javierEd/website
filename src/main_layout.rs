@@ -3,14 +3,28 @@ use leptos_bulma::columns::{BColumn, BColumns};
 use leptos_bulma::components::{
     BDropdown, BDropdownItem, BNavbar, BNavbarBrand, BNavbarBurger, BNavbarEnd, BNavbarItem, BNavbarMenu, BNavbarStart,
 };
+use leptos_bulma::elements::{BButton, BButtons, BIcon, BSubtitle, BTitle};
+use leptos_bulma::icons::icondata_fa;
 use leptos_use::use_interval_fn;
 
 use crate::components::{JobTitle, JobTitlesCarousel};
 use crate::i18n::{t, use_i18n, Locale};
+use crate::main_router::use_theme_context;
 
 #[component]
 pub fn MainLayout(children: Children) -> impl IntoView {
     let i18n = use_i18n();
+    let theme = use_theme_context();
+    let theme_is_dark = create_rw_signal(theme.is_dark());
+    let theme_is_light = create_rw_signal(theme.is_light());
+    let theme_is_system = create_rw_signal(theme.is_system());
+
+    create_effect(move |_| {
+        theme.get();
+        theme_is_dark.set(theme.is_dark());
+        theme_is_light.set(theme.is_light());
+        theme_is_system.set(theme.is_system());
+    });
 
     let job_titles = [
         "Software Developer",
@@ -66,8 +80,12 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                         </figure>
                     </div>
                     <div class="media-content">
-                        <div class="title is-5 has-text-light">"Javier E."</div>
-                        <div class="subtitle is-6 has-text-grey-lighter"><JobTitlesCarousel/></div>
+                        <BTitle is=5 class="has-text-light">
+                            "Javier E."
+                        </BTitle>
+                        <BSubtitle is=6 class="has-text-grey-lighter">
+                            <JobTitlesCarousel/>
+                        </BSubtitle>
                     </div>
                 </BNavbarItem>
 
@@ -101,7 +119,9 @@ pub fn MainLayout(children: Children) -> impl IntoView {
             </BNavbarMenu>
         </BNavbar>
 
-        <main class="container"><div class="m-5">{children()}</div></main>
+        <main class="container">
+            <div class="m-5">{children()}</div>
+        </main>
 
         <footer class="footer">
             <div class="content container">
@@ -111,14 +131,22 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                             {t!(i18n, this_website_was_made_with)}
                             <a class="mx-3" href="https://leptos.dev" target="_blank" title="Go to Leptos">
                                 <picture>
-                                    <source srcset="/images/leptos-logo-light.svg" media="(prefers-color-scheme: dark)"/>
+                                    <Show when=move || theme.is_dark() || theme.is_system()>
+                                        <source
+                                            srcset="/images/leptos-logo-light.svg"
+                                            media="(prefers-color-scheme: dark)"
+                                        />
+                                    </Show>
                                     <img src="/images/leptos-logo.svg" alt="Leptos" width="100"/>
                                 </picture>
-                            </a>
-                            &
-                            <a class="mx-3" href="https://bulma.io/" target="_blank" title="Go to Bulma">
+                            </a> & <a class="mx-3" href="https://bulma.io/" target="_blank" title="Go to Bulma">
                                 <picture>
-                                    <source srcset="/images/bulma-logo-light.svg" media="(prefers-color-scheme: dark)"/>
+                                    <Show when=move || theme.is_dark() || theme.is_system()>
+                                        <source
+                                            srcset="/images/bulma-logo-light.svg"
+                                            media="(prefers-color-scheme: dark)"
+                                        />
+                                    </Show>
                                     <img src="/images/bulma-logo.svg" alt="Bulma" width="100"/>
                                 </picture>
                             </a>
@@ -127,27 +155,53 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                             {t!(i18n, and_you_can_see_the_source_code_at)}
                             <a
                                 class="mx-3"
-                                href="https://github.com/javierEd/website"
+                                href="https://github.com/javierEd/leptos-bulma/blob/main/website"
                                 target="_blank"
                                 title="Go to GitHub"
                             >
                                 <picture>
-                                    <source srcset="/images/github-logo-light.svg" media="(prefers-color-scheme: dark)"/>
+                                    <Show when=move || theme.is_dark() || theme.is_system()>
+                                        <source
+                                            srcset="/images/github-logo-light.svg"
+                                            media="(prefers-color-scheme: dark)"
+                                        />
+                                    </Show>
                                     <img src="/images/github-logo.svg" alt="GitHub" width="100"/>
                                 </picture>
                             </a>
                         </div>
                     </BColumn>
 
-                    <BColumn is="narrow">
+                    <BColumn is="narrow has-text-right">
                         <BDropdown
-                            trigger=|| view! {
-                                <span class="has-text-weight-bold">{t!(i18n, change_language)}" ▼"</span>
+                            class="mb-4"
+                            is_right=true
+                            is_up=true
+                            trigger=move || {
+                                view! { <span class="has-text-weight-bold">{t!(i18n, change_language)} " ▲"</span> }
                             }
                         >
-                            <BDropdownItem on_click=move|_| i18n.set_locale(Locale::en)>"English"</BDropdownItem>
-                            <BDropdownItem on_click=move|_| i18n.set_locale(Locale::es)>"Español"</BDropdownItem>
+
+                            <BDropdownItem on:click=move |_| i18n.set_locale(Locale::en)>"English"</BDropdownItem>
+                            <BDropdownItem on:click=move |_| i18n.set_locale(Locale::es)>"Español"</BDropdownItem>
                         </BDropdown>
+
+                        <BButtons has_addons=true>
+                            <BButton
+                                class="ml-auto"
+                                title="System theme"
+                                is_active=theme_is_system
+                                on:click=move |_| theme.set_system()
+                            >
+                                <BIcon is_scaled=false icon=icondata_fa::FaDesktopSolid/>
+                            </BButton>
+                            <BButton title="Light theme" is_active=theme_is_light on:click=move |_| theme.set_light()>
+                                <BIcon is_scaled=false icon=icondata_fa::FaSunSolid/>
+                            </BButton>
+                            <BButton title="Dark theme" is_active=theme_is_dark on:click=move |_| theme.set_dark()>
+                                <BIcon is_scaled=false icon=icondata_fa::FaMoonSolid/>
+                            </BButton>
+                        </BButtons>
                     </BColumn>
                 </BColumns>
             </div>

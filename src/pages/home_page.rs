@@ -1,5 +1,5 @@
 use leptos::*;
-use leptos_bulma::elements::{BSubtitle, BTitle};
+use leptos_bulma::elements::{BBlock, BSubtitle, BTitle};
 use leptos_bulma::layout::BSection;
 
 use crate::components::{JobTitlesCarousel, PageTitle, PostBoxes};
@@ -29,12 +29,17 @@ pub fn HomePage() -> impl IntoView {
                     .get()
                     .and_then(|v| v.ok())
                     .map(|(posts, _)| {
-                        view! {
-                            <PostBoxes posts=posts/>
+                        if !posts.is_empty() {
+                            view! {
+                                <PostBoxes posts=posts/>
 
-                            <a class="button is-fullwidth" href="/blog">
-                                {t!(i18n, show_more)}
-                            </a>
+                                <a class="button is-fullwidth" href="/blog">
+                                    {t!(i18n, show_more)}
+                                </a>
+                            }
+                                .into_view()
+                        } else {
+                            view! { <BBlock class="has-text-centered">{t!(i18n, nothing_to_see_here_yet)}</BBlock> }
                         }
                     })}
 

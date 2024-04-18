@@ -1,6 +1,7 @@
-use chrono::{NaiveDate, Utc};
 use leptos::*;
 use leptos_bulma::columns::{BColumn, BColumns};
+use time::macros::date;
+use time::OffsetDateTime;
 
 use crate::components::PageTitle;
 use crate::i18n::{t, use_i18n};
@@ -9,26 +10,38 @@ use crate::i18n::{t, use_i18n};
 pub fn AboutPage() -> impl IntoView {
     let i18n = use_i18n();
 
-    let start_date = NaiveDate::from_ymd_opt(2010, 10, 1).unwrap();
+    let start_date = date!(2010 - 10 - 02);
 
-    let experience_years = move || Utc::now().date_naive().years_since(start_date).unwrap_or_default();
+    let experience_years =
+        move || ((OffsetDateTime::now_utc().date() - start_date).as_seconds_f32() / 31104000.0).round() as i32;
 
     let cumana_link_view = move || {
         view! {
-            <a href="https://maps.app.goo.gl/TYt8nVUcte1JNmQ96" target="_blank">"Cumaná, Venezuela"</a>
+            <a href="https://maps.app.goo.gl/TYt8nVUcte1JNmQ96" target="_blank">
+                "Cumaná, Venezuela"
+            </a>
         }
     };
 
     let projects = [(
         1,
-        view! { <a href="https://github.com/javierEd/leptos-bulma" target="_blank">"Leptos Bulma"</a> },
+        view! {
+            <a href="https://github.com/javierEd/leptos-bulma" target="_blank">
+                "Leptos Bulma"
+            </a>
+        },
         view! { "A Leptos component library based on Bulma CSS framework." },
     )];
 
     let experience = [
         (
             7,
-            view! { <a href="https://www.comunidadfeliz.cl/" target="_blank">"ComunidadFeliz SpA"</a> }.into_view(),
+            view! {
+                <a href="https://www.comunidadfeliz.cl/" target="_blank">
+                    "ComunidadFeliz SpA"
+                </a>
+            }
+            .into_view(),
             "Fullstack Developer",
             "Fulltime",
             view! { "Remote" }.into_view(),
@@ -36,7 +49,12 @@ pub fn AboutPage() -> impl IntoView {
         ),
         (
             6,
-            view! { <a href="https://vascarsolutions.com/" target="_blank">"Vascar Solutions "</a> }.into_view(),
+            view! {
+                <a href="https://vascarsolutions.com/" target="_blank">
+                    "Vascar Solutions "
+                </a>
+            }
+            .into_view(),
             "Backend Developer",
             "Freelance",
             view! { "Remote" }.into_view(),
@@ -44,7 +62,12 @@ pub fn AboutPage() -> impl IntoView {
         ),
         (
             5,
-            view! { <a href="https://simgulary.io/" target="_blank">"SIM C.A."</a> }.into_view(),
+            view! {
+                <a href="https://simgulary.io/" target="_blank">
+                    "SIM C.A."
+                </a>
+            }
+            .into_view(),
             "Backend Developer",
             "Freelance",
             cumana_link_view.into_view(),
@@ -60,7 +83,12 @@ pub fn AboutPage() -> impl IntoView {
         ),
         (
             3,
-            view! { <a href="https://cesticom.com/" target="_blank">"CESTICOM C.A."</a> }.into_view(),
+            view! {
+                <a href="https://cesticom.com/" target="_blank">
+                    "CESTICOM C.A."
+                </a>
+            }
+            .into_view(),
             "Software Developer",
             "Fulltime",
             cumana_link_view.into_view(),
@@ -91,45 +119,57 @@ pub fn AboutPage() -> impl IntoView {
 
         <h3 class="subtitle is-3">
             <ul>
-                <li>"I'm a Software Developer with "{experience_years}" years of experience."</li>
+                <li>"I'm a Software Developer with " {experience_years} " years of experience."</li>
                 <li>
-                    "I've been in "
-                    <a href="https://maps.app.goo.gl/T3HN2x8KL44DhxDB9" target="_blank">
+                    "I've been in " <a href="https://maps.app.goo.gl/T3HN2x8KL44DhxDB9" target="_blank">
                         "Buenos Aires, Argentina"
-                    </a>
-                    " since October 2022."
+                    </a> " since October 2022."
                 </li>
-                <li>"But I was born and raised in "{cumana_link_view}"."</li>
+                <li>"But I was born and raised in " {cumana_link_view} "."</li>
             </ul>
         </h3>
 
         <section class="section">
             <h4 class="title mb-1">"Open Source Projects"</h4>
 
-            <For each=move|| projects.clone() key=|p| p.0 children=move |p| view! {
-                <div class="pt-5">
-                    <h5 class="title is-4">{p.1}</h5>
-                    <h6 class="subtitle">{p.2}</h6>
-                </div>
-            }/>
+            <For
+                each=move || projects.clone()
+                key=|p| p.0
+                children=move |p| {
+                    view! {
+                        <div class="pt-5">
+                            <h5 class="title is-4">{p.1}</h5>
+                            <h6 class="subtitle">{p.2}</h6>
+                        </div>
+                    }
+                }
+            />
+
         </section>
 
         <section class="section">
             <h4 class="title mb-1">"Professional Experience"</h4>
 
-            <For each=move|| experience.clone() key=|exp| exp.0 children=move |exp| view! {
-                <div class="pt-5">
-                    <h5 class="title is-4">{exp.1}</h5>
-                    <h6 class="subtitle">
-                        <BColumns>
-                            <BColumn>{exp.2}</BColumn>
-                            <BColumn>{exp.3}</BColumn>
-                            <BColumn>{exp.4}</BColumn>
-                            <BColumn>{exp.5}</BColumn>
-                        </BColumns>
-                    </h6>
-                </div>
-            }/>
+            <For
+                each=move || experience.clone()
+                key=|exp| exp.0
+                children=move |exp| {
+                    view! {
+                        <div class="pt-5">
+                            <h5 class="title is-4">{exp.1}</h5>
+                            <h6 class="subtitle">
+                                <BColumns>
+                                    <BColumn>{exp.2}</BColumn>
+                                    <BColumn>{exp.3}</BColumn>
+                                    <BColumn>{exp.4}</BColumn>
+                                    <BColumn>{exp.5}</BColumn>
+                                </BColumns>
+                            </h6>
+                        </div>
+                    }
+                }
+            />
+
         </section>
     }
 }
