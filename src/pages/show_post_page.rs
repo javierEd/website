@@ -48,7 +48,7 @@ pub fn ShowPostPage() -> impl IntoView {
                             />
                         </BBlock>
 
-                        <div class="block" inner_html=content_html></div>
+                        <div class="block post-content" inner_html=content_html></div>
                     }
                 })}
 
