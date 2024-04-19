@@ -5,27 +5,31 @@ use leptos_bulma::components::{
 };
 use leptos_bulma::elements::{BButton, BButtons, BIcon, BSubtitle, BTitle};
 use leptos_bulma::icons::icondata_fa;
-use leptos_use::use_interval_fn;
+use leptos_use::{use_interval_fn, ColorMode};
 
 use crate::components::{JobTitle, JobTitlesCarousel};
 use crate::i18n::{t, use_i18n, Locale};
-use crate::main_router::use_theme_context;
+use crate::main_router::use_app_color_mode;
 
 #[component]
 fn ImageColorModes(dark_src: &'static str, light_src: &'static str, alt: &'static str, width: i8) -> impl IntoView {
-    let theme = use_theme_context();
+    let color_mode = use_app_color_mode().mode;
 
     view! {
         <picture>
-            <Show when=move || theme.is_dark() || theme.is_system()>
+            <Show when=move || [ColorMode::Dark, ColorMode::Auto].contains(&color_mode.get())>
                 <source srcset=dark_src media="(prefers-color-scheme: dark)"/>
             </Show>
 
-            <Show when=move || theme.is_light() || theme.is_system()>
+            <Show when=move || [ColorMode::Light, ColorMode::Auto].contains(&color_mode.get())>
                 <source srcset=light_src media="(prefers-color-scheme: light)"/>
             </Show>
 
-            <img src=move || { if theme.is_dark() { dark_src } else { light_src } } alt=alt width=width/>
+            <img
+                src=move || { if color_mode.get() == ColorMode::Dark { dark_src } else { light_src } }
+                alt=alt
+                width=width
+            />
         </picture>
     }
 }
@@ -33,16 +37,18 @@ fn ImageColorModes(dark_src: &'static str, light_src: &'static str, alt: &'stati
 #[component]
 pub fn MainLayout(children: Children) -> impl IntoView {
     let i18n = use_i18n();
-    let theme = use_theme_context();
-    let theme_is_dark = create_rw_signal(theme.is_dark());
-    let theme_is_light = create_rw_signal(theme.is_light());
-    let theme_is_system = create_rw_signal(theme.is_system());
+    let app_color_mode = use_app_color_mode();
+    let color_mode = app_color_mode.mode.get();
+    let color_mode_is_dark = create_rw_signal(color_mode == ColorMode::Dark);
+    let color_mode_is_light = create_rw_signal(color_mode == ColorMode::Light);
+    let color_mode_is_auto = create_rw_signal(color_mode == ColorMode::Auto);
 
     create_effect(move |_| {
-        theme.get();
-        theme_is_dark.set(theme.is_dark());
-        theme_is_light.set(theme.is_light());
-        theme_is_system.set(theme.is_system());
+        let color_mode = app_color_mode.mode.get();
+
+        color_mode_is_dark.set(color_mode == ColorMode::Dark);
+        color_mode_is_light.set(color_mode == ColorMode::Light);
+        color_mode_is_auto.set(color_mode == ColorMode::Auto);
     });
 
     let job_titles = [
@@ -200,15 +206,23 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                             <BButton
                                 class="ml-auto"
                                 title="System theme"
-                                is_active=theme_is_system
-                                on:click=move |_| theme.set_system()
+                                is_active=color_mode_is_auto
+                                on:click=move |_| app_color_mode.set_mode.set(ColorMode::Auto)
                             >
                                 <BIcon is_scaled=false icon=icondata_fa::FaDesktopSolid/>
                             </BButton>
-                            <BButton title="Light theme" is_active=theme_is_light on:click=move |_| theme.set_light()>
+                            <BButton
+                                title="Light theme"
+                                is_active=color_mode_is_light
+                                on:click=move |_| app_color_mode.set_mode.set(ColorMode::Light)
+                            >
                                 <BIcon is_scaled=false icon=icondata_fa::FaSunSolid/>
                             </BButton>
-                            <BButton title="Dark theme" is_active=theme_is_dark on:click=move |_| theme.set_dark()>
+                            <BButton
+                                title="Dark theme"
+                                is_active=color_mode_is_dark
+                                on:click=move |_| app_color_mode.set_mode.set(ColorMode::Dark)
+                            >
                                 <BIcon is_scaled=false icon=icondata_fa::FaMoonSolid/>
                             </BButton>
                         </BButtons>
