@@ -40,7 +40,7 @@ pub fn MainRouter() -> impl IntoView {
 
         <div class="loading-overlay" class:is-done=leptos_dom::is_browser></div>
 
-        <Router>
+        <Router trailing_slash=TrailingSlash::Redirect>
             <MainLayout>
                 <Routes>
                     <Route path="" view=HomePage/>

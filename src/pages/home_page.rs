@@ -2,7 +2,7 @@ use leptos::*;
 use leptos_bulma::elements::{BBlock, BSubtitle, BTitle};
 use leptos_bulma::layout::BSection;
 
-use crate::components::{JobTitlesCarousel, PageTitle, PostBoxes};
+use crate::components::{JobTitlesCarousel, LoadingSpinner, PageTitle, PostBoxes};
 use crate::i18n::{t, use_i18n};
 use crate::server_functions::get_posts;
 
@@ -24,7 +24,9 @@ pub fn HomePage() -> impl IntoView {
         <BSection>
             <BTitle is=2>{t!(i18n, latest_posts)}</BTitle>
 
-            <Suspense>
+            <Suspense fallback=move || {
+                view! { <LoadingSpinner/> }
+            }>
                 {resource
                     .get()
                     .and_then(|v| v.ok())

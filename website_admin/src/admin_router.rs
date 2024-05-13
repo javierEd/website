@@ -16,7 +16,7 @@ pub fn AdminRouter() -> impl IntoView {
 
         <Title text="Javier E. - Admin Panel"/>
 
-        <Router>
+        <Router trailing_slash=TrailingSlash::Redirect>
             <Routes>
                 <Route path="/admin" view=HomePage/>
                 <Route path="/admin/login" view=LoginPage/>

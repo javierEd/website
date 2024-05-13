@@ -1,5 +1,6 @@
 use leptos::*;
 use leptos_bulma::elements::BButton;
+use leptos_bulma::enums::{BColor, BState};
 use leptos_bulma::form::{BControl, BField};
 use leptos_meta::Title;
 use leptos_router::Redirect;
@@ -49,10 +50,24 @@ pub fn SubmitButton(
     #[prop(default = "Submit")] label: &'static str,
     #[prop(optional, into)] is_loading: MaybeSignal<bool>,
 ) -> impl IntoView {
+    let assign_button_state = move || {
+        if is_loading.get() {
+            BState::Active
+        } else {
+            BState::Default
+        }
+    };
+
+    let button_state = create_rw_signal(assign_button_state());
+
+    create_effect(move |_| {
+        button_state.set(assign_button_state());
+    });
+
     view! {
         <BField>
             <BControl>
-                <BButton button_type="submit" class="button is-info is-fullwidth" is_loading=is_loading>
+                <BButton button_type="submit" color=BColor::Info is_fullwidth=true state=button_state>
                     {label}
                 </BButton>
             </BControl>

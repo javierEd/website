@@ -3,7 +3,7 @@ use leptos_bulma::components::BPagination;
 use leptos_bulma::elements::{BBlock, BTitle};
 use leptos_router::use_query_map;
 
-use crate::components::{PageTitle, PostBoxes};
+use crate::components::{LoadingSpinner, PageTitle, PostBoxes};
 use crate::i18n::{t, use_i18n};
 use crate::server_functions::get_posts;
 
@@ -29,7 +29,9 @@ pub fn BlogPage() -> impl IntoView {
 
         <BTitle is=1>{t!(i18n, blog)}</BTitle>
 
-        <Suspense>
+        <Suspense fallback=move || {
+            view! { <LoadingSpinner/> }
+        }>
             {resource
                 .get()
                 .and_then(|v| v.ok())

@@ -4,7 +4,7 @@ use leptos_router::use_params_map;
 
 use website_core::models::Post;
 
-use crate::components::{PageTitle, TimeAgo};
+use crate::components::{LoadingSpinner, PageTitle, TimeAgo};
 use crate::i18n::{t, use_i18n};
 
 #[server]
@@ -22,7 +22,9 @@ pub fn ShowPostPage() -> impl IntoView {
     view! {
         <PageTitle text="Blog"/>
 
-        <Suspense>
+        <Suspense fallback=move || {
+            view! { <LoadingSpinner/> }
+        }>
             {resource
                 .get()
                 .and_then(|data| data.ok())

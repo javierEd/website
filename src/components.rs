@@ -1,6 +1,7 @@
 use leptos::html::Span;
 use leptos::*;
-use leptos_bulma::elements::{BBox, BTitle};
+use leptos_bulma::elements::{BBox, BIcon, BTitle};
+use leptos_bulma::icons::icondata_fa;
 use leptos_meta::Title;
 use web_sys::wasm_bindgen::JsCast;
 use web_sys::HtmlDivElement;
@@ -54,6 +55,15 @@ pub fn JobTitlesCarousel(#[prop(default = "")] class: &'static str) -> impl Into
         <span class=format!("job-titles-carousel {}", class) node_ref=node_ref>
             <For each=move || job_titles.get() key=|jt| jt.to_owned() children=move |jt| view! { <div>{jt}</div> }/>
         </span>
+    }
+}
+
+#[component]
+pub fn LoadingSpinner() -> impl IntoView {
+    view! {
+        <div class="has-text-centered">
+            <BIcon class="is-rotating" is_large=true icon=icondata_fa::FaSpinnerSolid/>
+        </div>
     }
 }
 

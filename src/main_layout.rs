@@ -1,15 +1,25 @@
+use icondata_core::IconData;
 use leptos::*;
 use leptos_bulma::columns::{BColumn, BColumns};
 use leptos_bulma::components::{
     BDropdown, BDropdownItem, BNavbar, BNavbarBrand, BNavbarBurger, BNavbarEnd, BNavbarItem, BNavbarMenu, BNavbarStart,
 };
 use leptos_bulma::elements::{BButton, BButtons, BIcon, BSubtitle, BTitle};
+use leptos_bulma::enums::BState;
 use leptos_bulma::icons::icondata_fa;
 use leptos_use::{use_interval_fn, ColorMode};
 
 use crate::components::{JobTitle, JobTitlesCarousel};
 use crate::i18n::{t, use_i18n, Locale};
 use crate::main_router::use_app_color_mode;
+
+fn color_mode_options() -> [(&'static str, &'static IconData, ColorMode); 3] {
+    [
+        ("System theme", icondata_fa::FaDesktopSolid, ColorMode::Auto),
+        ("Light theme", icondata_fa::FaSunSolid, ColorMode::Light),
+        ("Dark theme", icondata_fa::FaMoonSolid, ColorMode::Dark),
+    ]
+}
 
 #[component]
 fn ImageColorModes(dark_src: &'static str, light_src: &'static str, alt: &'static str, width: i8) -> impl IntoView {
@@ -38,18 +48,6 @@ fn ImageColorModes(dark_src: &'static str, light_src: &'static str, alt: &'stati
 pub fn MainLayout(children: Children) -> impl IntoView {
     let i18n = use_i18n();
     let app_color_mode = use_app_color_mode();
-    let color_mode = app_color_mode.mode.get();
-    let color_mode_is_dark = create_rw_signal(color_mode == ColorMode::Dark);
-    let color_mode_is_light = create_rw_signal(color_mode == ColorMode::Light);
-    let color_mode_is_auto = create_rw_signal(color_mode == ColorMode::Auto);
-
-    create_effect(move |_| {
-        let color_mode = app_color_mode.mode.get();
-
-        color_mode_is_dark.set(color_mode == ColorMode::Dark);
-        color_mode_is_light.set(color_mode == ColorMode::Light);
-        color_mode_is_auto.set(color_mode == ColorMode::Auto);
-    });
 
     let job_titles = [
         "Software Developer",
@@ -203,28 +201,32 @@ pub fn MainLayout(children: Children) -> impl IntoView {
                         </BDropdown>
 
                         <BButtons has_addons=true>
-                            <BButton
-                                class="ml-auto"
-                                title="System theme"
-                                is_active=color_mode_is_auto
-                                on:click=move |_| app_color_mode.set_mode.set(ColorMode::Auto)
-                            >
-                                <BIcon is_scaled=false icon=icondata_fa::FaDesktopSolid/>
-                            </BButton>
-                            <BButton
-                                title="Light theme"
-                                is_active=color_mode_is_light
-                                on:click=move |_| app_color_mode.set_mode.set(ColorMode::Light)
-                            >
-                                <BIcon is_scaled=false icon=icondata_fa::FaSunSolid/>
-                            </BButton>
-                            <BButton
-                                title="Dark theme"
-                                is_active=color_mode_is_dark
-                                on:click=move |_| app_color_mode.set_mode.set(ColorMode::Dark)
-                            >
-                                <BIcon is_scaled=false icon=icondata_fa::FaMoonSolid/>
-                            </BButton>
+
+                            <For
+                                each=color_mode_options
+                                key=|(_, _, mode)| mode.clone()
+                                children=move |(title, icon, mode)| {
+                                    let mode_clone = mode.clone();
+                                    let assign_button_state = move || {
+                                        let color_mode = app_color_mode.mode.get();
+                                        if color_mode == mode_clone { BState::Active } else { BState::Default }
+                                    };
+                                    let button_state = create_rw_signal(assign_button_state());
+                                    create_effect(move |_| {
+                                        button_state.set(assign_button_state());
+                                    });
+                                    view! {
+                                        <BButton
+                                            title=title
+                                            on:click=move |_| app_color_mode.set_mode.set(mode.clone())
+                                            state=button_state
+                                        >
+                                            <BIcon is_scaled=false icon=icon/>
+                                        </BButton>
+                                    }
+                                }
+                            />
+
                         </BButtons>
                     </BColumn>
                 </BColumns>

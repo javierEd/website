@@ -32,7 +32,7 @@ watch = [
     "Cargo.toml",
     "build.rs",
     "locales/*.yaml",
-    "style/*.scss",
+    "style/main.scss",
     "website_admin/**/*",
     "website_core/**/*",
 ]

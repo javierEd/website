@@ -1,4 +1,8 @@
-@use "leptos-bulma.css";
+@use "leptos-bulma.scss";
+
+:root {
+    --bulma-body-background-color: var(--bulma-scheme-main-bis);
+}
 
 main.container {
     min-height: calc(100vh - 280px);
@@ -10,7 +14,8 @@ ul {
 }
 
 .footer {
-    padding: 3rem 1.5rem;
+    --bulma-footer-background-color: var(--bulma-scheme-main-ter);
+    --bulma-footer-padding: 3rem 1.5rem;
 }
 
 .navbar-brand {
@@ -28,6 +33,10 @@ ul {
 .navbar-end {
     display: flex;
     justify-content: center;
+}
+
+.icon.is-rotating {
+    animation: rotating 1.5s linear infinite;
 }
 
 .job-titles-carousel {
@@ -65,5 +74,15 @@ ul {
 .post-content {
     p {
         margin-bottom: 1rem;
+    }
+}
+
+@keyframes rotating {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }
